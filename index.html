@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediHelp – Donate Medicines</title>
+
+<style>
+
+    /* ---------------- BACKGROUND IMAGE ---------------- */
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background-image: url("med.jpg");
+        background-size: cover;
+        background-position: center;
+        font-family: "Poppins", sans-serif;
+        position: relative;
+    }
+
+    /* Light overlay */
+    body::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.35);
+        backdrop-filter: blur(3px);
+    }
+
+    /* ---------------- NAVBAR ---------------- */
+    .navbar {
+        width: 100%;
+        padding: 15px 40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(6px);
+        position: fixed;
+        top: 0;
+        z-index: 10;
+    }
+
+    .nav-links a {
+        color: white;
+        margin-left: 22px;
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .nav-btn {
+        padding: 8px 16px;
+        background: #0c4b8f;
+        border-radius: 8px;
+        font-weight: 600;
+        color: white !important;
+    }
+
+    /* ---------------- CENTER TITLE ---------------- */
+    .title-box {
+        position: absolute;
+        top:40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        width: 80%;
+        max-width: 900px;
+        z-index: 2;
+    }
+
+    .title-box h1 {
+        font-size: 70px;
+        font-weight: 900;
+        color: #0c4b8f;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 6px rgba(255,255,255,0.8);
+    }
+
+    .subtitle {
+        font-size: 22px;
+        color: #000000;
+        line-height: 1.6;
+        font-weight: 500;
+        text-shadow: 1px 1px 4px rgba(255,255,255,0.9);
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <nav class="nav-links">
+        <a href="about.html">About</a>
+        <a href="login.html">Login</a>
+        <a class="nav-btn" href="signup.html">Sign Up</a>
+    </nav>
+</header>
+
+<!-- TITLE + SUBTITLE -->
+<div class="title-box">
+    <h1>MEDIHELP</h1>
+
+    <div class="subtitle">
+        MediHelp is a community platform that connects unused, unexpired medicines  
+        to people who need them most. By encouraging safe donation and responsible  
+        reuse, we reduce medicine waste and support accessible healthcare.
+    </div>
+</div>
+
+</body>
+</html>

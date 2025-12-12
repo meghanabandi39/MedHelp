@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicine List</title>
+
+<style>
+    body {
+        background: #f4f4f4;
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #0c4b8f;
+    }
+
+    .search-box {
+        max-width: 900px;
+        margin: 10px auto 30px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .search-box input, .search-box select {
+        padding: 12px;
+        flex: 1;
+        min-width: 180px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .medicine-list {
+        max-width: 900px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+    }
+
+    .card {
+        background: white;
+        padding: 18px;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        margin-top: 0;
+        color: #0c4b8f;
+    }
+
+    button {
+        padding: 10px 18px;
+        margin-top: 12px;
+        border-radius: 8px;
+        background: #0c4b8f;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #093d75;
+    }
+
+    .claimed {
+        background: gray !important;
+        cursor: not-allowed !important;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Available Medicines</h1>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search medicine name...">
+
+    <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="fever">Fever / Pain</option>
+        <option value="antibiotic">Antibiotic</option>
+        <option value="allergy">Allergy</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="immunity">Immunity</option>
+        <option value="gastric">Gastric</option>
+    </select>
+
+    <select id="expiryFilter">
+        <option value="">Expiry</option>
+        <option value="valid">Valid Only</option>
+        <option value="expired">Expired Only</option>
+    </select>
+</div>
+
+
+
+
+<script>
+
+async function loadMedicines() {
+    try {
+        const res = await fetch("http://localhost:5000/api/get-medicines");
+        const medicines = await res.json();
+
+        const container = document.getElementById("medicine-list");
+
+        medicines.forEach(med => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.dataset.name = med.name.toLowerCase();
+            card.dataset.category = med.category;
+            card.dataset.expiry = med.expiry;
+
+            card.innerHTML = `
+                <h3>${med.name}</h3>
+                <p><strong>Expiry:</strong> ${med.expiry}</p>
+                <p><strong>Quantity:</strong> ${med.quantity}</p>
+                <p><strong>Description:</strong> ${med.description}</p>
+                <p><strong>Category:</strong> ${med.category}</p>
+
+                <p><strong>Location:</strong> ${med.location}</p>
+                <p><strong>Phone:</strong> ${med.phone}</p>
+
+                <button class="claim-btn">Claim Medicine</button>
+            `;
+
+            container.appendChild(card);
+        });
+
+        attachClaimEvents();
+
+    } catch (err) {
+        console.log("Error fetching from server:", err);
+    }
+}
+
+loadMedicines();
+
+function attachClaimEvents() {
+    document.querySelectorAll(".claim-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            this.textContent = "Claimed";
+            this.classList.add("claimed");
+            this.disabled = true;
+        });
+    });
+}
+
+document.getElementById("searchInput").addEventListener("input", filterMedicines);
+document.getElementById("categoryFilter").addEventListener("change", filterMedicines);
+document.getElementById("expiryFilter").addEventListener("change", filterMedicines);
+
+function filterMedicines() {
+    const searchValue = document.getElementById("searchInput").value.toLowerCase();
+    const categoryValue = document.getElementById("categoryFilter").value;
+    const expiryValue = document.getElementById("expiryFilter").value;
+
+    const cards = document.querySelectorAll(".card");
+    const today = new Date();
+
+    cards.forEach(card => {
+        let name = card.dataset.name;
+        let category = card.dataset.category;
+        let expiry = new Date(card.dataset.expiry + "-01");
+
+        let show = true;
+
+        if (searchValue && !name.includes(searchValue)) show = false;
+        if (categoryValue && category !== categoryValue) show = false;
+
+        if (expiryValue === "valid" && expiry < today) show = false;
+        if (expiryValue === "expired" && expiry >= today) show = false;
+
+        card.style.display = show ? "block" : "none";
+    });
+}
+
+</script>
+<div class="medicine-list" id="medicine-list"></div>
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="chatbot.html">
+        <button style="
+            padding:12px 20px;
+            background:#0c4b8f;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            cursor:pointer;">
+            Open Medical Chatbot 💬
+        </button>
+    </a>
+
+</body>
+</html>
+

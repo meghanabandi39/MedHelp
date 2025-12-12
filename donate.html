@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donate Medicines</title>
+
+<style>
+
+    /* --------- PAGE BACKGROUND --------- */
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #c9a0e8, #8e5ad7, #6b43c6);
+    }
+
+    /* --------- MAIN CONTAINER --------- */
+    .container {
+        width: 450px;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 32px;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        backdrop-filter: blur(6px);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* --------- HEADING --------- */
+    h2 {
+        text-align: center;
+        color: #4b247b;
+        margin-bottom: 20px;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    /* --------- INPUT FIELDS --------- */
+    input, textarea, select {
+        width: 100%;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 10px;
+        border: 1px solid #b5b5b5;
+        font-size: 16px;
+        outline: none;
+        transition: 0.25s ease-in-out;
+        background: white;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #7a4cd9;
+        box-shadow: 0 0 8px rgba(96, 50, 180, 0.4);
+    }
+
+    textarea {
+        height: 80px;
+        resize: none;
+    }
+
+    /* --------- SUBMIT BUTTON --------- */
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #6e3bd9;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #5722c6;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+        transform: translateY(-2px);
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Donate Medicines</h2>
+
+    <input id="medName" type="text" placeholder="Medicine Name" required>
+
+    <input id="expiry" type="month" min="2024-01" max="2050-12" required>
+
+    <input id="quantity" type="text" placeholder="Quantity" required>
+
+    <textarea id="notes" placeholder="Additional Notes"></textarea>
+
+    <input id="location" type="text" placeholder="Your Location" required>
+
+    <input id="phone" type="tel" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+
+    <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="fever">Fever / Pain</option>
+        <option value="antibiotic">Antibiotic</option>
+        <option value="allergy">Allergy</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="immunity">Immunity</option>
+        <option value="gastric">Gastric</option>
+    </select>
+
+    <button onclick="addMedicine()">Submit Donation</button>
+</div>
+
+<script>
+async function addMedicine() {
+    const data = {
+        name: document.getElementById("medName").value,
+        expiry: document.getElementById("expiry").value,
+        quantity: document.getElementById("quantity").value,
+        description: document.getElementById("notes").value,
+        location: document.getElementById("location").value,
+        phone: document.getElementById("phone").value,
+        category: document.getElementById("category").value
+    };
+
+    const res = await fetch("http://localhost:5000/api/add-medicines", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+        alert("Medicine donated successfully!");
+        window.location.href = "medicine-details.html";
+    } else {
+        alert("Error: Medicine not added!");
+    }
+}
+</script>
+
+</body>
+</html>

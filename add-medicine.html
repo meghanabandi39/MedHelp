@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donate Medicines</title>
+
+<style>
+    body {
+        background: #f7f7f7;
+        font-family: Arial;
+        margin: 0;
+        padding: 30px;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Donate Medicines</h2>
+
+    <input id="medName" type="text" placeholder="Medicine Name" required>
+    <input id="expiry" type="month" required>
+    <input id="quantity" type="text" placeholder="Quantity" required>
+    <textarea id="notes" placeholder="Additional Notes"></textarea>
+
+    <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="fever">Fever / Pain</option>
+        <option value="antibiotic">Antibiotic</option>
+        <option value="allergy">Allergy</option>
+        <option value="diabetes">Diabetes</option>
+        <option value="immunity">Immunity</option>
+        <option value="gastric">Gastric</option>
+    </select>
+
+    <button id="submitBtn">Submit Donation</button>
+</div>
+
+<script>
+document.getElementById("submitBtn").addEventListener("click", addMedicine);
+
+async function addMedicine() {
+
+    const data = {
+        name: document.getElementById("medName").value,
+        expiry: document.getElementById("expiry").value,
+        quantity: document.getElementById("quantity").value,
+        description: document.getElementById("notes").value,
+        category: document.getElementById("category").value
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/add-medicines", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+});
+
+        const result = await res.json();
+
+        if (result.success) {
+            alert("Medicine donated successfully!");
+            window.location.href = "medicine-details.html";
+        } else {
+            alert("Failed to add medicine");
+        }
+
+    } catch (err) {
+        alert("Backend not running!");
+    }
+}
+</script>
+
+</body>
+</html>
+

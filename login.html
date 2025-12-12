@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Segoe UI", sans-serif;
+
+        /* BEAUTIFUL GRADIENT BACKGROUND */
+        background: linear-gradient(135deg, #a86ae8, #6a4bc9, #3f2b96);
+        background-size: cover;
+    }
+
+    .login-box {
+        width: 380px;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 35px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    h2 {
+        text-align: center;
+        color: #3b0a64;
+        margin-bottom: 20px;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        margin: 12px 0;
+        border-radius: 10px;
+        border: 1px solid #b8b8b8;
+        font-size: 15px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    input:focus {
+        border-color: #6a4bc9;
+        box-shadow: 0px 0px 8px rgba(106, 75, 201, 0.4);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #6a4bc9;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        margin-top: 10px;
+        font-size: 17px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #4d2ca8;
+        box-shadow: 0px 5px 12px rgba(0,0,0,0.2);
+        transform: translateY(-2px);
+    }
+
+</style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Login</h2>
+
+    <input type="email" id="email" placeholder="Enter Email" required>
+    <input type="password" id="password" placeholder="Enter Password" required>
+
+    <button onclick="loginUser()">Login</button>
+</div>
+
+<script>
+function loginUser() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+        alert("Please enter both email and password.");
+        return;
+    }
+
+    fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Login successful!");
+            window.location.href = "h.html";
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(err => {
+        alert("Server error. Check if backend is running.");
+        console.error(err);
+    });
+}
+</script>
+
+</body>
+</html>
